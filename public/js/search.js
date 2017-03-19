@@ -79,6 +79,7 @@ window.addEventListener("DOMContentLoaded", function() {
       var $c_result= document.getElementById("c_result")
       var $p_result= document.getElementById("p_result")
       var data = JSON.parse(data)
+      console.log(data)
       var c_tasks = data["c_task"]
       var p_tasks = data["p_task"]
       var c_tasks_length = Object.keys(c_tasks).length

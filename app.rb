@@ -106,14 +106,16 @@ post '/create_child_task/:id' do
 		name: name,
 		pid: params[:id],
 		deadline: str_d,
-		p_name: p_task.name
+		p_name: p_task.name,
+    user: session[:user].to_i()
 		})
     c_task = Child_Task.where(pid: params[:id]).where(check: 0).order(:deadline).first
     #c_task = Child_Task.find_by_sql("select * from child_tasks where pid="+params[:id].to_s+" and check = 0 order by deadline")
     p_task.update({
 			total_task: update_total_task,
       current_deadline: c_task.deadline,
-      update_rank: rank + 1
+      update_rank: rank + 1,
+
 		})
     end
 	end
@@ -176,8 +178,8 @@ end
 post '/search' do
 	query = params[:query]
 	if query != "" then
-	p_task = Parent_Task.name_like(query)
-	c_task = Child_Task.name_like(query)
+	p_task = Parent_Task.where(user: session[:user]).name_like(query)
+	c_task = Child_Task.where(user: session[:user]).name_like(query)
 	res = {
 		"p_task": p_task,
 		"c_task": c_task

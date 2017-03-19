@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170319100955) do
+ActiveRecord::Schema.define(version: 20170319182646) do
 
   create_table "child_tasks", force: :cascade do |t|
     t.string   "name"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20170319100955) do
     t.datetime "updated_at",             null: false
     t.text     "deadline"
     t.string   "p_name"
+    t.integer  "user"
   end
 
   create_table "parent_tasks", force: :cascade do |t|
