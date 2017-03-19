@@ -109,6 +109,7 @@ post '/create_child_task/:id' do
 		p_name: p_task.name
 		})
     c_task = Child_Task.where(pid: params[:id]).where(check: 0).order(:deadline).first
+    #c_task = Child_Task.find_by_sql("select * from child_tasks where pid="+params[:id].to_s+" and check = 0 order by deadline")
     p_task.update({
 			total_task: update_total_task,
       current_deadline: c_task.deadline,
@@ -126,12 +127,25 @@ post '/check/:id' do
 		check: 1
 		})
 
-  c_task = Child_Task.where(pid: c_pid).where(check: 0).order(:deadline).first
+  tmp_c_task = Child_Task.where(pid: c_pid).order(:deadline)
+  c_task = []
+  tmp_c_task.each do |tc|
+    puts tc.check
+    if tc.check == 0 then
+      c_task.push(tc)
+    end
+  end
   p_task = Parent_Task.find_by(id: c_pid)
+  unless c_task.empty? then
 	p_task.update({
 		completed_task: p_task.completed_task + 1,
-    current_deadline: c_task.deadline
+    current_deadline: c_task[0].deadline
 	})
+else
+  p_task.update({
+		completed_task: p_task.completed_task + 1
+	})
+end
 	redirect '/edit/' << check_status.pid
 end
 post '/not_check/:id' do
@@ -140,11 +154,19 @@ post '/not_check/:id' do
 	check_status.update({
 		check: 0
 		})
-    c_task = Child_Task.where(pid: c_pid).where(check: 0).order(:deadline).first
+  tmp_c_task = Child_Task.where(pid: c_pid).order(:deadline)
+  c_task = []
+  tmp_c_task.each do |tc|
+    puts tc.check
+    if tc.check == 0 then
+      c_task.push(tc)
+    end
+  end
+
 	p_task = Parent_Task.find_by(id: c_pid)
 	p_task.update({
 		completed_task: p_task.completed_task - 1,
-    current_deadline: c_task.deadline
+    current_deadline: c_task[0].deadline
 		})
 	redirect '/edit/' << check_status.pid
 
