@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper grey lighten-3">
+        <a class="brand-logo black-text" href="/">Todo</a>
+        <ul class="right hide-on-med-and-down " id="nav-mobile">
+
+            <%if session[:user]%>
+          <li>
+            <a href="/search" class="black-text">Search</a>
+          </li>
+          <li>
+            <a href="/signout" class="black-text">Logout</a>
+          </li>
+            <%else%>
+            <li>
+            <a href="/signin" class="black-text">Signin</a>
+          </li>
+          <li>
+            <a href="/signup" class="black-text">Signup</a>
+          </li>
+            <%end%>
+        </ul>
+      </div>
+    </nav>
+    <h2><%= h @p_task.name%></h2>
+    <div class="row">
+
+      <form action="/create_child_task/<%= @task_id%>" class="col s12" method="post">
+        <div class="row">
+          <div class="input-field col s6">
+            タスク名
+            <input id="task_name" name="name">
+          </div>
+          <div class="input-field col s5">
+            期限
+            <input class="datepicker" name="deadline" type="date"required>
+          </div>
+          <input class="waves-effect waves-light btn s2" type="submit" value="登録">
+        </div>
+      </form>
+
+    </div>
+    <%if session[:c_querry_error] != nil%>
+    <p style="color:#f00"><%=session[:c_querry_error]%></p>
+    <%session[:c_querry_error] = nil%>
+    <%end%>
+    <%if @task.length != 0%>
+    <%@task.each do |t|%>
+    <%if t.check == 0%>
+    <div>
+      <div class="row">
+        <div class="col s12 m6">
+          <div class="card grey lighten-3">
+            <div class="card-content black-text">
+              <span class="card-title"><%= h t.name%></span>
+              <p><%= h t.deadline%></p>
+              <p><%= h t.created_at%></p></div>
+              <div class="card-action">
+              <% if t.check == 0%>
+              <form action="/check/<%= t.id%>" method="post">
+                <input id="not_check" type="submit" value="未完" class="waves-effect waves-light btn s6 red">
+              </form>
+              <%else%>
+              <form action="/not_check/<%= t.id%>" method="post">
+                <input id="check" type="submit" value="完了済み" class="waves-effect waves-light btn s6 blue">
+              </form>
+              <% end%>
+              </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <%end%>
+    <% end%>
+    <%@task.each do |t|%>
+    <%if t.check == 1%>
+    <div>
+      <div class="row">
+        <div class="col s12 m6">
+          <div class="card grey lighten-3">
+            <div class="card-content black-text">
+              <span class="card-title"><%= h t.name%></span>
+              <p><%= h t.deadline%></p>
+              <p><%= h t.created_at%></p>
+              </div>
+              <div class="card-action">
+              <% if t.check == 0%>
+              <form action="/check/<%= t.id%>" method="post">
+                <input id="not_check" type="submit" value="未完" class="waves-effect waves-light btn s6 red">
+              </form>
+              <%else%>
+              <form action="/not_check/<%= t.id%>" method="post">
+                <input id="check" type="submit" value="完了済み" class="waves-effect waves-light btn s6 blue">
+              </form>
+              <% end%>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% end%>
+    <% end%>
+
+  <% else%>
+    <h4>登録されているタスクがありません</h4>
+    <% end%>
+    <script crossorigin="anonymous" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+    <script>
+      $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+      });
+    </script>
+  </body>
+</html>

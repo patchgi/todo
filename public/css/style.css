@@ -1,0 +1,9 @@
+.s_deadline{
+  text-align: right;
+}
+.s_created_at_c{
+float: right;
+}
+.task_data{
+  display: inline-block;
+}
