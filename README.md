@@ -27,3 +27,5 @@
  https://todo-clone.herokuapp.com
  
  にアクセス
+ 
+ 右上にあるサインアップやサインインの処理をして使える。
